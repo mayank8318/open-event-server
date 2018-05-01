@@ -3,7 +3,7 @@ data:
   REDIS_URL: "redis://redis.redis:6379/0"
   DATABASE_URL: "postgresql://postgres:test@postgres.postgres:5432/opev"
   POSTGRES_DB: "opev"
-  SENTRY_DSN: "https://dummy@app.getsentry.com/dummy"
+  SENTRY_DSN: "https://705c218710a446fe940c329b5c649e3c@sentry.io/1198200"
 kind: ConfigMap
 metadata:
   namespace: web

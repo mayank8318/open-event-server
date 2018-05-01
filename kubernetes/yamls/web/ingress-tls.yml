@@ -9,7 +9,7 @@ metadata:
 spec:
   tls:
   - hosts:
-    - api.eventyay.com
+    - openevent.ml
     secretName: eventyay-api-tls
   rules:
   - host: api.eventyay.com

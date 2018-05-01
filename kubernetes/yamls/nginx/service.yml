@@ -7,7 +7,7 @@ metadata:
     service.beta.kubernetes.io/external-traffic: "OnlyLocal"
 spec:
   type: LoadBalancer
-  loadBalancerIP: '35.185.193.151'
+  loadBalancerIP: '35.200.175.3'
   ports:
   - port: 80
     name: http
