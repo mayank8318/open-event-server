@@ -64,26 +64,27 @@ def send_mail_via_smtp_task(config, payload):
 
 @celery.task(base=RequestContextTask, name='export.event', bind=True)
 def export_event_task(self, email, event_id, settings):
-    event = safe_query(db, Event, 'id', event_id, 'event_id')
-    user = db.session.query(User).filter_by(email=email).first()
-    try:
-        logging.info('Exporting started')
-        path = event_export_task_base(event_id, settings)
-        # task_id = self.request.id.__str__()  # str(async result)
-        download_url = path
+    with celery.app.app_context():
+        event = safe_query(db, Event, 'id', event_id, 'event_id')
+        user = db.session.query(User).filter_by(email=email).first()
+        try:
+            logging.info('Exporting started')
+            path = event_export_task_base(event_id, settings)
+            # task_id = self.request.id.__str__()  # str(async result)
+            download_url = path
 
-        result = {
-            'download_url': download_url
-        }
-        logging.info('Exporting done.. sending email')
-        send_export_mail(email=email, event_name=event.name, download_url=download_url)
-        send_notif_after_export(user=user, event_name=event.name, download_url=download_url)
-    except Exception as e:
-        print(traceback.format_exc())
-        result = {'__error': True, 'result': str(e)}
-        logging.info('Error in exporting.. sending email')
-        send_export_mail(email=email, event_name=event.name, error_text=str(e))
-        send_notif_after_export(user=user, event_name=event.name, error_text=str(e))
+            result = {
+                'download_url': download_url
+            }
+            logging.info('Exporting done.. sending email')
+            send_export_mail(email=email, event_name=event.name, download_url=download_url)
+            send_notif_after_export(user=user, event_name=event.name, download_url=download_url)
+        except Exception as e:
+            print(traceback.format_exc())
+            result = {'__error': True, 'result': str(e)}
+            logging.info('Error in exporting.. sending email')
+            send_export_mail(email=email, event_name=event.name, error_text=str(e))
+            send_notif_after_export(user=user, event_name=event.name, error_text=str(e))
 
     return result
 
